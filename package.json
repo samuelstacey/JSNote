@@ -1,6 +1,18 @@
 {
   "type": "module",
   "dependencies": {
-    "fastify": "^4.26.0"
-  }
+    "@fastify/mongodb": "^8.0.0",
+    "fastify": "^4.26.0",
+    "fastify-plugin": "^4.5.1"
+  },
+  "name": "jsnote",
+  "description": "A notes app written in JS with Node and the Fastify framework. Used for learning.",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
