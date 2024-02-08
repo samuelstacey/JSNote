@@ -3,7 +3,8 @@
   "dependencies": {
     "@fastify/mongodb": "^8.0.0",
     "fastify": "^4.26.0",
-    "fastify-plugin": "^4.5.1"
+    "fastify-plugin": "^4.5.1",
+    "mocha": "^10.2.0"
   },
   "name": "jsnote",
   "description": "A notes app written in JS with Node and the Fastify framework. Used for learning.",

@@ -1,7 +1,7 @@
 // ESM
 import Fastify from 'fastify'
-import dbConnector from './Config/mongo-db-connector.js'
-import noteRoutes from './Routes/note-routes.js'
+import dbConnector from './main/Config/mongo-db-connector.js'
+import noteRoutes from './main/Routes/note-routes.js'
 
 const fastify = Fastify({
   logger: true
