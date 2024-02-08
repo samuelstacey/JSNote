@@ -1,7 +1,7 @@
 // ESM
 import Fastify from 'fastify'
 import dbConnector from './Config/mongo-db-connector.js'
-import testRoute from './Routes/test-route.js'
+import noteRoutes from './Routes/note-routes.js'
 
 const fastify = Fastify({
   logger: true
@@ -9,7 +9,7 @@ const fastify = Fastify({
 
 
 fastify.register(dbConnector)
-fastify.register(testRoute)
+fastify.register(noteRoutes, {prefix: '/api/v1'})
 
 /**
  * Run the server!
