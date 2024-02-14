@@ -1,38 +1,64 @@
 
-import schema from '../model/note.js'
+import noteSchema from '../model/note.js'
+import NoteService from '../services/note-service.js'
+
 
 /**
- * Encapsulates the routes
+ * Defines the routes and handlers
  * @param {FastifyInstance} fastify  Encapsulated Fastify Instance
  * @param {Object} options plugin options, refer to https://fastify.dev/docs/latest/Reference/Plugins/#plugin-options
  */
 async function routes (fastify, options) {
-    const collection = fastify.mongo.db.collection('note')
 
-    //Get all notes
-    fastify.get('/note', async (request, reply) => {
-        const result = await collection.find().toArray()
-        if (result.length === 0) {
-          throw new Error('No documents found')
-        }
-        return result
-      })
-    
-    //Search by note title
-    fastify.get('/note/:title', async (request, reply) => {
-    const result = await collection.findOne({ "note.title": request.params.title })
-    if (!result) {
-        throw new Error('Invalid value')
-    }
-    return result
-    })
-
-    fastify.post('/note', { schema }, async (request, reply) => {
-    // we can use the `request.body` object to get the data sent by the client
-    const result = await collection.insertOne({ note: request.body })
-    return result
-    })
-  }
+  // Collection is gettable here but not elsewhere. Fastify is worse than spring for confusingly being pulled in...
+  const collection = fastify.mongo.db.collection('note')
+  const noteService = new NoteService(fastify, collection);
   
-  //ESM
-  export default routes;
+  //HANDLERS
+  //TODO: Data modelling doesn't seem to be very good.
+  async function addNoteHandler(request, reply) {
+    //TODO: Add logging
+    const response = await noteService.addNote(request);
+    reply.code(response.code).send(response.body);
+  }
+
+
+  async function searchByTitleHandler(request, reply) {
+    //TODO: Add logging?
+    const response = await noteService.findByTitle(request);
+    reply.code(response.code).send(response.body);
+  }
+
+
+  async function getAllNotesHandler(request, reply) {
+    //TODO: Add logging?
+    const result = await collection.find().toArray();
+    console.log(result);
+    const response = await noteService.getAll();
+    reply.code(response.code).send(response.body);
+  }
+
+
+  //ROUTES
+  fastify.route({
+    method: 'POST',
+    url: '/note',
+    schema: noteSchema,
+    handler: addNoteHandler,
+  });
+
+  fastify.route({
+    method: 'GET',
+    url: '/note/:title',
+    handler: searchByTitleHandler,
+  });
+
+  fastify.route({
+    method: 'GET',
+    url: '/note',
+    handler: getAllNotesHandler,
+  });
+
+};
+
+export default routes;
