@@ -57,8 +57,15 @@ async function addNote(note) {
     return note;
 }
 
+async function deleteNote(id) {
+    const notesTable = database.table('Notes');
+    await notesTable.deleteRows([id])
+    console.log(`Deleted data with ID:${id}`);
+}
+
 module.exports = {
     getAllNotes,
     getNoteByTitle,
-    addNote
+    addNote,
+    deleteNote
 }

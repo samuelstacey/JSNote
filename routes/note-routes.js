@@ -26,9 +26,13 @@ async function routes(fastify, options) {
         return result;
     })
 
-    fastify.post('/note', {schema}, async (request, reply) => {
-        // we can use the `request.body` object to get the data sent by the client
+    fastify.delete('/note/:id', async (request, reply) => {
+        await noteFunctions.deleteNote(request.params.id);
+        //TODO: Do we fail silently if object already doesn't exist? (YES) Do we really want this?
+        reply.code(204);
+    })
 
+    fastify.post('/note', {schema}, async (request, reply) => {
         let result = await noteFunctions.addNote(request.body);
         if (Array.isArray(result) && !result.length) {
             reply.code(404);
