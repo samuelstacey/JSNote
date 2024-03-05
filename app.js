@@ -1,5 +1,4 @@
 const Fastify = require('fastify');
-const dbConnector = require('./config/mongo-db-connector.js');
 const noteRoutes = require('./routes/note-routes.js');
 
 const fastify = Fastify({
@@ -7,7 +6,6 @@ const fastify = Fastify({
 })
 
 
-fastify.register(dbConnector)
 fastify.register(noteRoutes, {prefix: '/api/v1'})
 
 /**

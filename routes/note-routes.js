@@ -1,6 +1,5 @@
-const schema = require('../main/model/note.js');
+const schema = require('../model/note.js');
 const noteFunctions = require('../config/spanner/note-functions.js');
-const {addNote} = require("../config/spanner/note-functions");
 
 /**
  * Encapsulates the routes
@@ -8,7 +7,6 @@ const {addNote} = require("../config/spanner/note-functions");
  * @param {Object} options plugin options, refer to https://fastify.dev/docs/latest/Reference/Plugins/#plugin-options
  */
 async function routes(fastify, options) {
-    const collection = fastify.mongo.db.collection('note')
 
     //Get all notes
     fastify.get('/note', async (request, reply) => {
