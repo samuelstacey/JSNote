@@ -1,4 +1,4 @@
-const schema = require('../model/note.js');
+const schema = require('../main/model/note.js');
 const noteFunctions = require('../config/spanner/note-functions.js');
 const {addNote} = require("../config/spanner/note-functions");
 
