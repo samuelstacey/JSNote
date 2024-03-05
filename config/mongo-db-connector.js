@@ -1,8 +1,8 @@
-
-import fastifyPlugin from 'fastify-plugin'
-import fastifyMongo from '@fastify/mongodb'
+const fastifyPlugin = require('fastify-plugin');
+const fastifyMongo = require('@fastify/mongodb');
 
 /**
+ * @deprecated Replaced with CloudSpanner DB as of 04/03/24
  * @param {FastifyInstance} fastify
  * @param {Object} options
  */
@@ -14,4 +14,4 @@ async function dbConnector (fastify, options) {
 
 // Wrapping a plugin function with fastify-plugin exposes the decorators
 // and hooks, declared inside the plugin to the parent scope.
-export default fastifyPlugin(dbConnector)
+module.exports = fastifyPlugin(dbConnector)

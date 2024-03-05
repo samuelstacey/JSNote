@@ -22,4 +22,4 @@ const schema = {
     body: noteBodyJsonSchema,
 }
 
-export default schema;
+module.exports = schema;
