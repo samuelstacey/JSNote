@@ -8,13 +8,12 @@ const noteFunctions = require('../config/spanner/note-functions.js');
  */
 async function routes(fastify, options) {
 
+    //TODO: Delete function may be appropriate - consider the danger when deleting objects,
+    // likely not a problem in this case but archival may be more appropriate?
+
     //Get all notes
     fastify.get('/note', async (request, reply) => {
-        const result = await noteFunctions.getAllNotes();
-        if (result.length === 0) {
-            throw new Error('No documents found')
-        }
-        return result
+        return await noteFunctions.getAllNotes()
     })
 
     //Search by note title
