@@ -13,21 +13,27 @@ async function routes(fastify, options) {
 
     //Get all notes
     fastify.get('/note', async (request, reply) => {
-        return await noteFunctions.getAllNotes()
+        return await noteFunctions.getAllNotes();
     })
 
     //Search by note title
+    //TODO: is there a possibility of multiple notes (yes) what are we doing about this?
     fastify.get('/note/:title', async (request, reply) => {
-        const result = await noteFunctions.getNoteByTitle(request.params.title)
+        const result = await noteFunctions.getNoteByTitle(request.params.title);
         if (!result) {
-            throw new Error('Invalid value')
+            reply.code(404);
         }
-        return result
+        return result;
     })
 
     fastify.post('/note', {schema}, async (request, reply) => {
         // we can use the `request.body` object to get the data sent by the client
-        return await noteFunctions.addNote(request.body)
+
+        let result = await noteFunctions.addNote(request.body);
+        if (Array.isArray(result) && !result.length) {
+            reply.code(404);
+        }
+        return result;
     })
 }
 
