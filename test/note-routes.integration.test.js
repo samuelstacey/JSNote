@@ -1,5 +1,6 @@
 const buildFastify = require('./config/app.test')
 const noteFunctions = require('../config/spanner/note-functions.js');
+const NoteNotFoundError = require("../error/note-not-found-error");
 
 const fastify = buildFastify();
 describe('Get all notes', () => {
@@ -104,7 +105,9 @@ describe('Get single note by title', () => {
 
     it('should return no note with 404 response', async () => {
         const mockedFunction = noteFunctions.getNoteByTitle = jest.fn()
-            .mockImplementation(() => Promise.resolve(null));
+            .mockImplementation(() => {
+                throw new NoteNotFoundError("There was no note with title: " + mockNoteTitle);
+            });
 
         const res = await fastify.inject({
             method: 'GET',
@@ -129,6 +132,53 @@ describe('Get single note by title', () => {
         expect(JSON.parse(res.body).error).toEqual("Internal Server Error");
         expect(JSON.parse(res.body).message).toEqual("Something went wrong!");
         expect(mockedFunction).toHaveBeenCalledWith(mockNoteTitle);
+    });
+});
+
+describe('Delete single note by id', () => {
+
+    let mockNoteID = "4d4b9f03-2ddd-434c-8e77-02ebb54a9172";
+
+    it('should delete the note with 204 response', async () => {
+        const mockedFunction = noteFunctions.deleteNote = jest.fn()
+            .mockImplementation(() => Promise.resolve(true));
+
+        const res = await fastify.inject({
+            method: 'DELETE',
+            url: `api/v1/note/${mockNoteID}`,
+        });
+
+        expect(res.statusCode).toEqual(204);
+        expect(mockedFunction).toHaveBeenCalledWith(mockNoteID);
+    });
+
+    it('should fail to delete note with 404 response', async () => {
+        const mockedFunction = noteFunctions.deleteNote = jest.fn()
+            .mockImplementation(() => Promise.resolve(false));
+
+        const res = await fastify.inject({
+            method: 'DELETE',
+            url: `api/v1/note/${mockNoteID}`,
+        });
+
+        expect(res.statusCode).toEqual(404);
+        expect(res.statusMessage).toEqual("Not Found");
+        expect(mockedFunction).toHaveBeenCalledWith(mockNoteID);
+    });
+
+    it('should return 500 if DB error', async () => {
+        const mockedFunction = noteFunctions.deleteNote = jest.fn()
+            .mockImplementation(() => Promise.resolve(Error("Something went wrong!")));
+
+        const res = await fastify.inject({
+            method: 'DELETE',
+            url: `api/v1/note/${mockNoteID}`,
+        });
+
+        expect(res.statusCode).toEqual(500);
+        expect(JSON.parse(res.body).error).toEqual("Internal Server Error");
+        expect(JSON.parse(res.body).message).toEqual("Something went wrong!");
+        expect(mockedFunction).toHaveBeenCalledWith(mockNoteID);
     });
 });
 
@@ -172,6 +222,9 @@ describe('Add note', () => {
     });
 
     it('should return 500 if db fails', async () => {
+
+        //TODO: Should this be an if mocked function throws? Rather than returns an error?
+        // YES, update to be consistent with line 107
         const mockedFunction = noteFunctions.addNote = jest.fn()
             .mockImplementation(() => Promise.resolve(Error("Something went wrong!")));
 

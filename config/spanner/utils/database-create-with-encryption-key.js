@@ -25,9 +25,6 @@ async function createDatabaseWithEncryptionKey(
     // Imports the Google Cloud client library
     const {Spanner, protos} = require('@google-cloud/spanner');
 
-    /**
-     * TODO(developer): Uncomment the following lines before running the sample.
-     */
         // const projectId = 'my-project-id';
         // const instanceId = 'my-instance';
         // const databaseId = 'my-database';

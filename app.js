@@ -1,5 +1,6 @@
 const Fastify = require('fastify');
 const noteRoutes = require('./routes/note-routes.js');
+const handleError = require("./routes/error/error-handler");
 
 const fastify = Fastify({
   logger: true
@@ -7,6 +8,9 @@ const fastify = Fastify({
 
 
 fastify.register(noteRoutes, {prefix: '/api/v1'})
+fastify.setErrorHandler((error, request, reply) => {
+  handleError(error, request, reply);
+})
 
 /**
  * Run the server!

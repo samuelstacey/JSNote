@@ -19,9 +19,6 @@
 async function createDatabase(instanceID, databaseID, projectID) {
     // [START spanner_create_database]
 
-    /**
-     * TODO(developer): Uncomment the following lines before running the sample.
-     */
     const projectId = 'starlit-surge-416209';
     const instanceId = 'test-instance';
     const databaseId = 'note-database';
@@ -61,51 +58,48 @@ async function createDatabase(instanceID, databaseID, projectID) {
     // [END spanner_create_database]
 }
 
-async function addColumn(instanceId, databaseId, projectId) {
-    // [START spanner_add_column]
-
-    /**
-     * TODO(developer): Uncomment the following lines before running the sample.
-     */
-        // const projectId = 'my-project-id';
-        // const instanceId = 'my-instance';
-        // const databaseId = 'my-database';
-
-        // Imports the Google Cloud client library
-    const {Spanner} = require('@google-cloud/spanner');
-
-    // creates a client
-    const spanner = new Spanner({
-        projectId: projectId,
-    });
-
-    const databaseAdminClient = spanner.getDatabaseAdminClient();
-
-    // Creates a new index in the database
-    try {
-        const [operation] = await databaseAdminClient.updateDatabaseDdl({
-            database: databaseAdminClient.databasePath(
-                projectId,
-                instanceId,
-                databaseId
-            ),
-            statements: ['ALTER TABLE Albums ADD COLUMN MarketingBudget INT64'],
-        });
-
-        console.log('Waiting for operation to complete...');
-        await operation.promise();
-
-        console.log('Added the MarketingBudget column.');
-    } catch (err) {
-        console.error('ERROR:', err);
-    } finally {
-        // Close the spanner client when finished.
-        // The databaseAdminClient does not require explicit closure. The closure of the Spanner client will automatically close the databaseAdminClient.
-        spanner.close();
-    }
-
-    // [END spanner_add_column]
-}
+// async function addColumn(instanceId, databaseId, projectId) {
+//     // [START spanner_add_column]
+//
+//         // const projectId = 'my-project-id';
+//         // const instanceId = 'my-instance';
+//         // const databaseId = 'my-database';
+//
+//         // Imports the Google Cloud client library
+//     const {Spanner} = require('@google-cloud/spanner');
+//
+//     // creates a client
+//     const spanner = new Spanner({
+//         projectId: projectId,
+//     });
+//
+//     const databaseAdminClient = spanner.getDatabaseAdminClient();
+//
+//     // Creates a new index in the database
+//     try {
+//         const [operation] = await databaseAdminClient.updateDatabaseDdl({
+//             database: databaseAdminClient.databasePath(
+//                 projectId,
+//                 instanceId,
+//                 databaseId
+//             ),
+//             statements: ['ALTER TABLE Albums ADD COLUMN MarketingBudget INT64'],
+//         });
+//
+//         console.log('Waiting for operation to complete...');
+//         await operation.promise();
+//
+//         console.log('Added the MarketingBudget column.');
+//     } catch (err) {
+//         console.error('ERROR:', err);
+//     } finally {
+//         // Close the spanner client when finished.
+//         // The databaseAdminClient does not require explicit closure. The closure of the Spanner client will automatically close the databaseAdminClient.
+//         spanner.close();
+//     }
+//
+//     // [END spanner_add_column]
+// }
 
 const {
     createDatabaseWithVersionRetentionPeriod,

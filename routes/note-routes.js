@@ -8,30 +8,29 @@ const noteFunctions = require('../config/spanner/note-functions.js');
  */
 async function routes(fastify, options) {
 
-    //TODO: Delete function may be appropriate - consider the danger when deleting objects,
-    // likely not a problem in this case but archival may be more appropriate?
-
     //Get all notes
     fastify.get('/note', async (request, reply) => {
         return await noteFunctions.getAllNotes();
     })
 
-    //Search by note title
-    //TODO: is there a possibility of multiple notes (yes) what are we doing about this?
+    //Search by note title, returns a set of notes
     fastify.get('/note/:title', async (request, reply) => {
-        const result = await noteFunctions.getNoteByTitle(request.params.title);
-        if (!result) {
-            reply.code(404);
-        }
-        return result;
+        return await noteFunctions.getNoteByTitle(request.params.title);
     })
 
+    //delete note by id
     fastify.delete('/note/:id', async (request, reply) => {
-        await noteFunctions.deleteNote(request.params.id);
-        //TODO: Do we fail silently if object already doesn't exist? (YES) Do we really want this?
-        reply.code(204);
+        const deleted = await noteFunctions.deleteNote(request.params.id);
+        //TODO: Correct behaviour but this code is a disgrace, fix this with a top-level error handler
+        if (deleted === false) {
+            reply.code(404);
+        } else if (deleted === true) {
+            reply.code(204);
+        }
+        return deleted;
     })
 
+    //add note
     fastify.post('/note', {schema}, async (request, reply) => {
         let result = await noteFunctions.addNote(request.body);
         if (Array.isArray(result) && !result.length) {

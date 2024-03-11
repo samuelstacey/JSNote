@@ -20,9 +20,6 @@
 'use strict';
 
 function main(instanceId, databaseId, defaultLeader, projectId) {
-    /**
-     * TODO(developer): Uncomment the following lines before running the sample.
-     */
         // const projectId = 'my-project-id';
         // const instanceId = 'my-instance-id';
         // const databaseId = 'my-database-id';

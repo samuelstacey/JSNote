@@ -25,9 +25,6 @@ async function createDatabaseWithVersionRetentionPeriod(
     // Imports the Google Cloud client library
     const {Spanner} = require('@google-cloud/spanner');
 
-    /**
-     * TODO(developer): Uncomment the following lines before running the sample.
-     */
         // const projectId = 'my-project-id';
         // const instanceId = 'my-instance';
 

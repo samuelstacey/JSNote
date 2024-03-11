@@ -1,12 +1,11 @@
-/**
- * TODO(developer): Uncomment the following lines before running the sample.
- */
+
 const projectId = 'starlit-surge-416209';
 const instanceId = 'test-instance';
 const databaseId = 'note-database';
 
 // Imports the Google Cloud client library
 const {Spanner} = require('@google-cloud/spanner');
+const NoteNotFoundError = require("../../error/note-not-found-error");
 
 // creates a client
 const spanner = new Spanner({
@@ -37,6 +36,10 @@ async function getNoteByTitle(title) {
     };
     const [rows] = await database.run(getNoteByTitleStatement);
 
+    if (rows.length === 0) {
+        throw new NoteNotFoundError("There was no note with title: " + title);
+    }
+
     console.log(`Notes:`);
     rows.forEach(row => console.log(row));
     return rows;
@@ -61,6 +64,7 @@ async function deleteNote(id) {
     const notesTable = database.table('Notes');
     await notesTable.deleteRows([id])
     console.log(`Deleted data with ID:${id}`);
+    return true;
 }
 
 module.exports = {
